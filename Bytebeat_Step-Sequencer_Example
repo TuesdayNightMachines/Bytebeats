@@ -1,0 +1,68 @@
+// Bytebeat Step-Sequencer Example Code
+// by The Tuesday Night Machines
+// paste and play in here: https://greggman.com/downloads/examples/html5bytebeat/html5bytebeat.html
+
+
+
+(
+(
+// gate start   gate stop     note
+(t%16000>=100 & t%16000<1000)*t*4
+|
+(t%16000>=1000 & t%16000<1500)*t*2
+|
+(t%16000>=2000 & t%16000<3000)*t*12
+|
+(t%16000>=4000 & t%16000<5000)*t*10
+|
+(t%16000>=8000 & t%16000<9000)*t*18
+|
+(t%16000>=12000 & t%16000<14000)*t*12
+|
+(t%16000>=14000 & t%16000<14500)*t*10
+)
+
+//fun stuff
+^
+(
+-t*8*(t%16000<2000)
+^
+(-t/32)*(t%16000>12000)
+)
+&
+(
+t>>4
+&
+-t>>8
+)
+
+// bass notes
+|
+(
+(
+(t%64000>100 & t%64000<16000)*t*4
+|
+(t%64000>16100 & t%64000<32000)*t*3
+|
+(t%64000>32100 & t%64000<48000)*t*5
+|
+(t%64000>48100)*t*8
+)
+/(2+(1*(t%128000>=64000))) // div by2 after 64000
+%128                       // reduce amplitude by half
+)
+)
+
+// ducking and phasing
+|
+(t%16000)/32
+&
+(t*2)%127+64
+
+//percussion
+|
+(
+(t%8000>0 & t%8000<100)*-t
+|
+(t%8000>4000 & t%8000<4200)*t*200
+)
